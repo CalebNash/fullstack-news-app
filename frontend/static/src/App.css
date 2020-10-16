@@ -8,3 +8,7 @@
 .page-content{
   justify-content: space-between;
 }
+
+body {
+  background-color: #F5F5F5;
+}

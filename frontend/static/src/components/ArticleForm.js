@@ -6,8 +6,8 @@ class ArticleForm extends React.Component{
     this.state = {
       title: '',
       body: '',
-      category: '',
-      status: '',
+      category: 'travel',
+      status: 'draft',
       author: '',
       top_story: false,
     }
@@ -21,12 +21,12 @@ class ArticleForm extends React.Component{
   render(){
 
     return(
-      <form className="col-12 col-md-6 mb-5" onSubmit={(event) => this.props.handleSubmit(event, this.state)}>
+      <form className="col-12" onSubmit={(event) => this.props.handleSubmit(event, this.state)}>
         <div className="form-group">
           <label htmlFor="title">Title</label>
           <input type="text" className="form-control" id="title" name="title" value={this.state.title} onChange={this.handleChange}/>
           <label htmlFor="body">Body</label>
-          <textarea type="text" className="form-control" id="body" name="body" value={this.state.body} onChange={this.handleChange}/>
+          <textarea rows='5' type="text" className="form-control" id="body" name="body" value={this.state.body} onChange={this.handleChange}/>
           <label htmlFor="category">Category</label>
           <select id="category" className="form-control" name="category" value={this.state.category} onChange={this.handleChange}>
             <option>travel</option>
