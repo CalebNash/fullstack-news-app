@@ -12,3 +12,8 @@
 body {
   background-color: #F5F5F5;
 }
+
+.display-article-modal {
+    width: 50vw;
+    max-width: 50vw;
+}

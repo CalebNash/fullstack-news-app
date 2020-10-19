@@ -3,39 +3,7 @@ import ArticleList from './components/ArticleList'
 import ArticleForm from './components/ArticleForm'
 import ArticlePosts from './components/ArticlePosts'
 import Cookies from 'js-cookie'
-// import Modal from 'react-bootstrap/Model';
-// import Button from 'react-bootstrap/Button';
 import './App.css';
-
-// function Example() {
-//   const [show, setShow] = useState(false);
-//
-//   const handleClose = () => setShow(false);
-//   const handleShow = () => setShow(true);
-//
-//   return (
-//     <>
-//       <Button variant="primary" onClick={handleShow}>
-//         Launch demo modal
-//       </Button>
-//
-//       <Modal show={show} onHide={handleClose}>
-//         <Modal.Header closeButton>
-//           <Modal.Title>Modal heading</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="secondary" onClick={handleClose}>
-//             Close
-//           </Button>
-//           <Button variant="primary" onClick={handleClose}>
-//             Save Changes
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-//     </>
-//   );
-// }
 
 
 class Article extends React.Component{
@@ -47,6 +15,8 @@ class Article extends React.Component{
   }
   this.handleSubmit = this.handleSubmit.bind(this);
   this.handleClick = this.handleClick.bind(this);
+  this.deleteArticle = this.deleteArticle.bind(this);
+  this.editArticle = this.editArticle.bind(this);
 }
 
 componentDidMount() {
@@ -84,6 +54,36 @@ componentDidMount() {
     });
   }
 
+  deleteArticle(id) {
+      fetch(`/api/v1/${id}/`, {
+        method: 'DELETE',
+      })
+      .then(responce => responce)
+      .then(data => {
+        const articles = [...this.state.articles];
+        const index = articles.findIndex(article => article.id === id)
+        articles.splice(index,1);
+        this.setState({articles})
+      })
+      .catch(error => console.log('Error:', error))
+    }
+
+
+    editArticle(event, data, id){
+        event.preventDefault();
+        fetch(`api/v1/${id}/`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responce => console.log(responce))
+        .catch(error => console.log('Error:', error));
+    }
+
+
   handleClick(display) {
       this.setState({page: display});
   }
@@ -100,10 +100,9 @@ componentDidMount() {
     }else if(page === 'form'){
       display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display = <ArticlePosts articles={this.state.articles}/>;
+      display = <ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle}/>;
     }
 
-    console.log(this.state.articles);
     return (
       <React.Fragment>
       <nav className="navbar navbar-dark">
