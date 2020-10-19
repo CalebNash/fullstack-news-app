@@ -106,13 +106,13 @@ componentDidMount() {
     return (
       <React.Fragment>
       <nav className="navbar navbar-dark">
-        <p className="webName">NEWS SITE</p>
         <div className='pages'>
           <button className="btn  menu-button"type="button" onClick={() => this.handleClick('home')}>Home</button>
           <button className="btn  menu-button"type="button" onClick={() => this.handleClick('form')}>Form</button>
           <button className="btn  menu-button"type="button" onClick={() => this.handleClick('posts')}>Posts</button>
         </div>
       </nav>
+      <div className='page-title'><h1>Fake News</h1></div>
       <div className='container fullpage'>
         {display}
       </div>

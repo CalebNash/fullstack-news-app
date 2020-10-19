@@ -1,12 +1,88 @@
+
+.page-title{
+  font-size: 32px;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  font-family: "Oswald", sans-serif;
+}
+
+.main-title{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-family: "Oswald", sans-serif;
+}
+
+#pages{
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .preview-para p {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.preview{
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.preview-title{
+  text-align: center;
+  font-weight: 500;
+  font-family: "Oswald", sans-serif;
+  margin-bottom: 20px;
+}
+
+.preview-category{
+  text-align: center;
+  color: blue;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.view-art{
+  border: 1px solid blue;
+    color: blue;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+
+}
+
+.preview-body{
+  padding-bottom: 30px;
+  border-bottom: 1px solid grey;
+  margin-bottom: 15px;
+}
+
+.preview-author{
+  text-align: left;
+  color: grey;
+  font-size: 14px;
+  margin: 5px;
 }
 
 .page-content{
   justify-content: space-between;
+}
+
+.posts-page{
+  justify-content: center;
+}
+.posts-title{
+  text-align: center;
+  font-family: "Oswald", sans-serif;
+  margin: 20px;
 }
 
 body {
@@ -16,4 +92,25 @@ body {
 .display-article-modal {
     width: 50vw;
     max-width: 50vw;
+}
+
+.side-preview{
+  margin-bottom: 20px;
+}
+
+.side-title{
+  text-align: center;
+  margin-top: 68px;
+  margin-bottom: 30px;
+  font-family: "Oswald", sans-serif;
+}
+
+.side-art-author{
+  display: inline;
+  color: grey;
+  font-size: 14px;
+}
+
+#side-art-foot{
+  justify-content: space-between;
 }

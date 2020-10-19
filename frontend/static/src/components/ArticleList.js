@@ -7,11 +7,15 @@ function ArticleItem(props){
   return(
     <div className='list-group'>
       <div className='list-group-item preview'>
-        <h4>{props.article.title}</h4>
-        <div className='preview-para'>
-          <p className='todo-title'>{props.article.body}</p>
-        </div>
-        <button className="btn view-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
+        <section className='preview-body'>
+          <h4 className='preview-title'>{props.article.title}</h4>
+          <h5 className='preview-category'>{props.article.category}</h5>
+          <div className='preview-para'>
+            <p className='todo-title'>{props.article.body}</p>
+          </div>
+          <button className="btn view-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
+        </section>
+        <p className='preview-author'>By {props.article.author}</p>
       </div>
     </div>
   )
@@ -21,9 +25,12 @@ function ArticleTitle(props){
 
   return(
     <div className='list-group'>
-      <div className='list-group-item'>
-        <p>{props.article.title}</p>
-        <button className="btn view-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
+      <div className='list-group-item side-preview'>
+        <p className='side-art-title'>{props.article.title}</p>
+        <section id='side-art-foot'>
+          <p className='side-art-author'>by {props.article.author}</p>
+          <button className="btn view-side-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
+        </section>
       </div>
     </div>
   )
@@ -102,7 +109,7 @@ render(){
   return (
     <React.Fragment>
     <div className='row page-content'>
-      <div className='col-6'>
+      <div className='col-lg-8 '>
       <section id="pages" className="row">
         <button className=" btn" onClick={() => this.handleClick('Top Stories')}>Top Stories</button>
         <button className=" btn" onClick={() => this.handleClick('Sports')}>Sports</button>
@@ -111,10 +118,10 @@ render(){
         <button className=" btn" onClick={() => this.handleClick('Entertainment')}>Entertainment</button>
 
     </section>
-      <h1>{this.state.category}</h1>
+      <h1 className='main-title'>{this.state.category}</h1>
       {bigArticles}
       </div>
-      <div className='col-3'><h2>This week</h2>{littleArticles}</div>
+      <div className='col-lg-4 side'><h2 className='side-title'>This week</h2>{littleArticles}</div>
     </div>
     <Modal dialogClassName="display-article-modal" show={this.state.show} >
       <Modal.Header>{this.state.articleDisplay.title}</Modal.Header>

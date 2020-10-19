@@ -31,8 +31,8 @@ class ArticlePosts extends React.Component{
     articleDisplay: {},
     title: '',
     body: '',
-    category: '',
-    status: '',
+    category: 'travel',
+    status: 'draft',
     author: '',
     top_story: false,
   }
@@ -84,15 +84,15 @@ render(){
 //}}>
   return (
     <React.Fragment>
-    <div className='row page-content'>
-      <div className='col-6'>
+    <div className='row posts-page'>
+      <div className='col-8'>
       <section id="pages" className="row">
         <button className=" btn" onClick={() => this.handleClick('All Posts')}>All Posts</button>
         <button className=" btn" onClick={() => this.handleClick('Drafts')}>Drafts</button>
         <button className=" btn" onClick={() => this.handleClick('Submited')}>Submited</button>
         <button className=" btn" onClick={() => this.handleClick('Published')}>Published</button>
     </section>
-      <h1>{this.state.displayStatus}</h1>
+      <h1 className='posts-title'>{this.state.displayStatus}</h1>
       {display}
       </div>
     </div>
