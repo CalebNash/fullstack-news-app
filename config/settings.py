@@ -38,11 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
 
     #3rd party
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
     #local
+    'api.apps.ApiConfig',
     'articles.apps.ArticlesConfig',
     'frontend.apps.FrontendConfig',
 
@@ -137,6 +145,10 @@ STATICFILES_DIRS = (
 
 REACT_APP_DIR = os.path.join(BASE_DIR, 'frontend/static')
 
+
+SITE_ID = 1
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #Django REST Framework permissions
 
 
