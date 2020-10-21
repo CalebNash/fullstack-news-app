@@ -9,7 +9,7 @@ class ArticleForm extends React.Component{
       body: '',
       category: 'travel',
       status: 'draft',
-      author: '',
+      user: '',
       top_story: false,
     }
     this.handleChange = this.handleChange.bind(this);
@@ -41,8 +41,6 @@ class ArticleForm extends React.Component{
             <option>submit</option>
             <option>publish</option>
           </select>
-          <label htmlFor="author">Author</label>
-          <input type="text" className="form-control" id="author" name="author" value={this.state.author} onChange={this.handleChange}/>
         </div>
         <button type="submit" className="btn btn-primary">Save</button>
       </form>

@@ -15,7 +15,7 @@ function ArticleItem(props){
           </div>
           <button className="btn view-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
         </section>
-        <p className='preview-author'>By {props.article.author}</p>
+        <p className='preview-author'>By {props.article.user}</p>
       </div>
     </div>
   )
@@ -28,7 +28,7 @@ function ArticleTitle(props){
       <div className='list-group-item side-preview'>
         <p className='side-art-title'>{props.article.title}</p>
         <section id='side-art-foot'>
-          <p className='side-art-author'>by {props.article.author}</p>
+          <p className='side-art-author'>by {props.article.user}</p>
           <button className="btn view-side-art"type="button" onClick={() => props.handleModal(props.article.id)}>View Article</button>
         </section>
       </div>

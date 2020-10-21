@@ -33,7 +33,7 @@ class ArticlePosts extends React.Component{
     body: '',
     category: 'travel',
     status: 'draft',
-    author: '',
+    user: '',
     top_story: false,
   }
   this.handleClick = this.handleClick.bind(this);
@@ -92,6 +92,7 @@ render(){
         <button className=" btn" onClick={() => this.handleClick('Submited')}>Submited</button>
         <button className=" btn" onClick={() => this.handleClick('Published')}>Published</button>
     </section>
+    <button type="button" className="btn btn-primary" onClick={this.props.handleLogout}>Logout</button>
       <h1 className='posts-title'>{this.state.displayStatus}</h1>
       {display}
       </div>
@@ -118,8 +119,6 @@ render(){
             <option>submit</option>
             <option>publish</option>
           </select>
-          <label htmlFor="author">Author</label>
-          <input type="text" className="form-control" id="author" name="author" value={this.state.author} onChange={this.handleChange}/>
         </div>
         <button type="submit" className="btn btn-primary">Save</button>
       </form></Modal.Body>

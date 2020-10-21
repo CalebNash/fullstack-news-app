@@ -2,6 +2,8 @@ import React from 'react';
 import ArticleList from './components/ArticleList'
 import ArticleForm from './components/ArticleForm'
 import ArticlePosts from './components/ArticlePosts'
+import Register from './components/Register'
+import Login from './components/Login.js';
 import Cookies from 'js-cookie'
 import './App.css';
 
@@ -17,10 +19,13 @@ class Article extends React.Component{
   this.handleClick = this.handleClick.bind(this);
   this.deleteArticle = this.deleteArticle.bind(this);
   this.editArticle = this.editArticle.bind(this);
+  this.handleRegistration = this.handleRegistration.bind(this);
+  this.handleLogin = this.handleLogin.bind(this);
+  this.handleLogout = this.handleLogout.bind(this);
 }
 
 componentDidMount() {
-  fetch('/api/v1/')
+  fetch('/api/v1/articles/')
     .then(responce => responce.json())
     .then(data => this.setState({articles: data}))
     .catch(error => console.log('Error: ', error));
@@ -88,6 +93,77 @@ componentDidMount() {
       this.setState({page: display});
   }
 
+  async handleRegistration(e, obj){
+  e.preventDefault();
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': Cookies.get('csrftoken'),
+    },
+    body: JSON.stringify(obj)
+  };
+
+  const handleError = (err) => console.warn(err);
+  const responce = await fetch('/api/v1/rest-auth/registration/', options);
+  const data = await responce.json().catch(handleError);
+
+  if(data.key){
+    Cookies.set('Authorization', `Token ${data.key}`)
+    this.setState({page: 'posts'});
+  }
+
+}
+
+async handleLogin(e, obj, reg){
+    e.preventDefault();
+    if(reg){
+      this.setState({page: 'register'});
+    }else{
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken'),
+        },
+        body: JSON.stringify(obj)
+      };
+
+      const handleError = (err) => console.warn(err);
+      const responce = await fetch('/api/v1/rest-auth/login/', options);
+      const data = await responce.json().catch(handleError);
+
+      if(data.key){
+        Cookies.set('Authorization', `Token ${data.key}`)
+        this.setState({loggedIn: true});
+        this.setState({page: 'posts'})
+      }
+    }
+  }
+
+  async handleLogout(e){
+    e.preventDefault();
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+    };
+
+    const handleError = (err) => console.warn(err);
+    const responce = await fetch('/api/v1/rest-auth/logout/', options);
+    const data = await responce.json().catch(handleError);
+
+    if(data.detail === "Successfully logged out."){
+      Cookies.remove('Authorization');
+      this.setState({page: 'home'});
+    }
+
+  }
+
 
 
   render(){
@@ -100,7 +176,11 @@ componentDidMount() {
     }else if(page === 'form'){
       display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display = <ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle}/>;
+      display =  <React.Fragment><ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout}/><ArticleForm handleSubmit= {this.handleSubmit}/></React.Fragment>;
+    }else if(page === 'register'){
+      display = <Register handleRegistration = {this.handleRegistration}/>;
+    }else if(page === 'login'){
+      display = <Login handleLogin = {this.handleLogin}/>;
     }
 
     return (
@@ -108,8 +188,7 @@ componentDidMount() {
       <nav className="navbar navbar-dark">
         <div className='pages'>
           <button className="btn  menu-button"type="button" onClick={() => this.handleClick('home')}>Home</button>
-          <button className="btn  menu-button"type="button" onClick={() => this.handleClick('form')}>Form</button>
-          <button className="btn  menu-button"type="button" onClick={() => this.handleClick('posts')}>Posts</button>
+          <button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button>
         </div>
       </nav>
       <div className='page-title'><h1>Fake News</h1></div>
