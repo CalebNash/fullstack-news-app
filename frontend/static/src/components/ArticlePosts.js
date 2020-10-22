@@ -92,7 +92,6 @@ render(){
         <button className=" btn" onClick={() => this.handleClick('Submited')}>Submited</button>
         <button className=" btn" onClick={() => this.handleClick('Published')}>Published</button>
     </section>
-    <button type="button" className="btn btn-primary" onClick={this.props.handleLogout}>Logout</button>
       <h1 className='posts-title'>{this.state.displayStatus}</h1>
       {display}
       </div>

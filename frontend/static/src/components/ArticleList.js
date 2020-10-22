@@ -123,8 +123,8 @@ render(){
       </div>
       <div className='col-lg-4 side'><h2 className='side-title'>This week</h2>{littleArticles}</div>
     </div>
-    <Modal dialogClassName="display-article-modal" show={this.state.show} >
-      <Modal.Header>{this.state.articleDisplay.title}</Modal.Header>
+    <Modal animation={false} dialogClassName="display-article-modal" show={this.state.show} >
+      <Modal.Header >{this.state.articleDisplay.title}</Modal.Header>
       <Modal.Body>{this.state.articleDisplay.body}</Modal.Body>
       <Modal.Footer>
         <Button onClick={(event) => this.setState({show: false})}>Close</Button>

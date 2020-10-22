@@ -14,6 +14,7 @@ class Article extends React.Component{
   this.state = {
     articles: [],
     page: 'home',
+    loggedIn: Cookies.get('Authorization')? true: false,
   }
   this.handleSubmit = this.handleSubmit.bind(this);
   this.handleClick = this.handleClick.bind(this);
@@ -60,7 +61,7 @@ componentDidMount() {
   }
 
   deleteArticle(id) {
-      fetch(`/api/v1/${id}/`, {
+      fetch(`/api/v1/articles/${id}/`, {
         method: 'DELETE',
       })
       .then(responce => responce)
@@ -76,7 +77,7 @@ componentDidMount() {
 
     editArticle(event, data, id){
         event.preventDefault();
-        fetch(`api/v1/${id}/`, {
+        fetch(`api/v1/articles/${id}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -187,8 +188,15 @@ async handleLogin(e, obj, reg){
       <React.Fragment>
       <nav className="navbar navbar-dark">
         <div className='pages'>
-          <button className="btn  menu-button"type="button" onClick={() => this.handleClick('home')}>Home</button>
-          <button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button>
+          <div className='nav-buttons'>
+            <button className="btn  menu-button"type="button" onClick={() => this.handleClick('home')}>Home</button>
+            <button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button>
+          </div>
+          {
+            this.state.loggedIn
+            ?<div className='logged-in'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('form')}>Form</button><button className="btn  menu-button"type="button" onClick={this.handleLogout}>Logout</button></div>
+            :<div></div>
+          }
         </div>
       </nav>
       <div className='page-title'><h1>Fake News</h1></div>

@@ -7,6 +7,20 @@
   font-family: "Oswald", sans-serif;
 }
 
+.nav-buttons{
+  display: inline;
+}
+
+.pages{
+  justify-content: space-between;
+
+}
+
+.logged-in{
+  display: inline;
+  align-self: flex-end;
+}
+
 .main-title{
   text-align: center;
   margin-top: 20px;
