@@ -4,6 +4,7 @@ import ArticleForm from './components/ArticleForm'
 import ArticlePosts from './components/ArticlePosts'
 import Register from './components/Register'
 import Login from './components/Login.js';
+import Profile from './components/Profile.js';
 import Cookies from 'js-cookie'
 import './App.css';
 
@@ -177,7 +178,7 @@ async handleLogin(e, obj, reg){
     }else if(page === 'form'){
       display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display =  <React.Fragment><ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout}/><ArticleForm handleSubmit= {this.handleSubmit}/></React.Fragment>;
+      display =  <React.Fragment><ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout}/><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
     }else if(page === 'register'){
       display = <Register handleRegistration = {this.handleRegistration}/>;
     }else if(page === 'login'){
