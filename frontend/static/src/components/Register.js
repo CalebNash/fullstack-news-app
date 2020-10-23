@@ -22,7 +22,7 @@ class Register extends React.Component{
     return(
       <div>
       <h1>Register</h1>
-      <form className="col-12" onSubmit={(event) => this.props.handleRegistration(event, this.state)}>
+      <form className="col-4" onSubmit={(event) => this.props.handleRegistration(event, this.state)}>
       <div className="form-group">
         <label htmlFor="title">username</label>
         <input type="text" className="form-control" id="username" name="username" value={this.state.title} onChange={this.handleChange}/>

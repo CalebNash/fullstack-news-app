@@ -16,6 +16,8 @@ class Article extends React.Component{
     articles: [],
     page: 'home',
     loggedIn: Cookies.get('Authorization')? true: false,
+    isStaff: localStorage.getItem('is_staff')? true: false,
+
   }
   this.handleSubmit = this.handleSubmit.bind(this);
   this.handleClick = this.handleClick.bind(this);
@@ -37,7 +39,7 @@ componentDidMount() {
     event.preventDefault();
     const csrftoken = Cookies.get('csrftoken')
     console.log('data', data);
-    fetch('/api/v1/', {
+    fetch('/api/v1/articles/', {
       method: 'POST',
       headers: {
         'X-CSRFToken': csrftoken,
@@ -62,8 +64,12 @@ componentDidMount() {
   }
 
   deleteArticle(id) {
+      const csrftoken = Cookies.get('csrftoken')
       fetch(`/api/v1/articles/${id}/`, {
         method: 'DELETE',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
       })
       .then(responce => responce)
       .then(data => {
@@ -78,9 +84,11 @@ componentDidMount() {
 
     editArticle(event, data, id){
         event.preventDefault();
+        const csrftoken = Cookies.get('csrftoken')
         fetch(`api/v1/articles/${id}/`, {
           method: 'PUT',
           headers: {
+            'X-CSRFToken': csrftoken,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
@@ -114,6 +122,7 @@ componentDidMount() {
   if(data.key){
     Cookies.set('Authorization', `Token ${data.key}`)
     this.setState({page: 'posts'});
+    this.setState({loggedIN: true});
   }
 
 }
@@ -140,6 +149,7 @@ async handleLogin(e, obj, reg){
         Cookies.set('Authorization', `Token ${data.key}`)
         this.setState({loggedIn: true});
         this.setState({page: 'posts'})
+        localStorage.setItem('is_staff', data.is_staff);
       }
     }
   }
@@ -162,6 +172,8 @@ async handleLogin(e, obj, reg){
     if(data.detail === "Successfully logged out."){
       Cookies.remove('Authorization');
       this.setState({page: 'home'});
+      this.setState({loggedIn: false});
+      localStorage.clear();
     }
 
   }
@@ -172,13 +184,12 @@ async handleLogin(e, obj, reg){
 
     let page = this.state.page;
     let display;
-
     if(page === 'home'){
       display = <ArticleList articles={this.state.articles}/>;
     }else if(page === 'form'){
       display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display =  <React.Fragment><ArticlePosts articles={this.state.articles} deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout}/><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
+      display =  <React.Fragment><ArticlePosts deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout} isStaff ={this.state.isStaff}/><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
     }else if(page === 'register'){
       display = <Register handleRegistration = {this.handleRegistration}/>;
     }else if(page === 'login'){
@@ -191,12 +202,11 @@ async handleLogin(e, obj, reg){
         <div className='pages'>
           <div className='nav-buttons'>
             <button className="btn  menu-button"type="button" onClick={() => this.handleClick('home')}>Home</button>
-            <button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button>
           </div>
           {
             this.state.loggedIn
-            ?<div className='logged-in'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('form')}>Form</button><button className="btn  menu-button"type="button" onClick={this.handleLogout}>Logout</button></div>
-            :<div></div>
+            ?<div className='log-status'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('posts')}>Posts</button><button className="btn  menu-button"type="button" onClick={this.handleLogout}>Logout</button></div>
+            :<div className='log-status'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button></div>
           }
         </div>
       </nav>

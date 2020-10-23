@@ -35,24 +35,42 @@ class ArticlePosts extends React.Component{
     status: 'draft',
     user: '',
     top_story: false,
+    articles: [],
   }
   this.handleClick = this.handleClick.bind(this);
   this.handleModal = this.handleModal.bind(this);
   this.handleChange = this.handleChange.bind(this);
 }
 
+componentDidMount() {
+  if(this.props.isStaff){
+    fetch('/api/v1/articles/super-user-view')
+      .then(responce => responce.json())
+      .then(data => this.setState({articles: data}))
+      .catch(error => console.log('Error: ', error));
+    }else{
+      fetch('/api/v1/articles/user-view')
+        .then(responce => responce.json())
+        .then(data => this.setState({articles: data}))
+        .catch(error => console.log('Error: ', error));
+    }
+  }
+
 handleClick(display) {
     this.setState({displayStatus: display});
 }
 
 handleModal(display) {
-    const articleId = this.props.articles.findIndex(x => x.id === display)
-    this.setState({articleDisplay: this.props.articles[articleId]})
+    const articleId = this.state.articles.findIndex(x => x.id === display)
+    this.setState({articleDisplay: this.state.articles[articleId]})
     this.setState({show: !this.state.show});
 }
 
 handleChange(event) {
-  this.setState({[event.target.name]: event.target.value});
+
+  const articleDisplay = {...this.state.articleDisplay};
+  articleDisplay[event.target.name] = event.target.value;
+  this.setState({articleDisplay});
 }
 
 render(){
@@ -61,18 +79,18 @@ render(){
   let display;
 
   if(status === 'All Posts'){
-     display = this.props.articles
+     display = this.state.articles
      .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
   }else if(status === 'Drafts'){
-    display = this.props.articles
+    display = this.state.articles
    .filter(article => article.status === 'draft')
    .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
  }else if(status === 'Submited'){
-    display = this.props.articles
+    display = this.state.articles
    .filter(article => article.status === 'submit')
    .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
  }else if(status === 'Published'){
-    display = this.props.articles
+    display = this.state.articles
    .filter(article => article.status === 'publish')
    .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
  }
@@ -96,24 +114,24 @@ render(){
       {display}
       </div>
     </div>
-    <Modal show={this.state.show} >
+    <Modal animation={false} show={this.state.show} >
       <Modal.Header>{this.state.articleDisplay.title}</Modal.Header>
       <Modal.Body>
-        <form className="col-12" onSubmit={(event)=> this.props.editArticle(event, this.state, this.state.articleDisplay.id)}>
+        <form className="col-12" onSubmit={(event)=> this.props.editArticle(event, this.state.articleDisplay, this.state.articleDisplay.id)}>
         <div className="form-group">
           <label htmlFor="title">Title</label>
-          <input type="text" className="form-control" id="title" name="title" value={this.state.title} onChange={this.handleChange}/>
+          <input type="text" className="form-control" id="title" name="title" value={this.state.articleDisplay.title} onChange={this.handleChange}/>
           <label htmlFor="body">Body</label>
-          <textarea rows='5' type="text" className="form-control" id="body" name="body" value={this.state.body} onChange={this.handleChange}/>
+          <textarea rows='5' type="text" className="form-control" id="body" name="body" value={this.state.articleDisplay.body} onChange={this.handleChange}/>
           <label htmlFor="category">Category</label>
-          <select id="category" className="form-control" name="category" value={this.state.category} onChange={this.handleChange}>
+          <select id="category" className="form-control" name="category" value={this.state.articleDisplay.category} onChange={this.handleChange}>
             <option>travel</option>
             <option>sports</option>
             <option>entertainment</option>
             <option>food</option>
           </select>
           <label htmlFor="status">Post Status</label>
-          <select id="status" className="form-control" name="status" value={this.state.status} onChange={this.handleChange}>
+          <select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}>
             <option>draft</option>
             <option>submit</option>
             <option>publish</option>

@@ -22,7 +22,7 @@ class Login extends React.Component{
     return(
       <div>
       <h1>Login</h1>
-      <form className="col-12" onSubmit={(event) => this.props.handleLogin(event, this.state, this.state.register)}>
+      <form className="col-4" onSubmit={(event) => this.props.handleLogin(event, this.state, this.state.register)}>
       <div className="form-group">
         <label htmlFor="title">username</label>
         <input type="text" className="form-control" id="username" name="username" value={this.state.title} onChange={this.handleChange}/>

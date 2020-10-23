@@ -12,24 +12,26 @@ class Profile extends React.Component {
     this.handleImage = this.handleImage.bind(this)
   }
 
-  async addImage(e, obj){
+  async addImage(e){
        e.preventDefault();
+       let formData = new FormData();
+       formData.append('avatar', this.state.image)
+       console.log(formData);
        const options = {
          method: 'POST',
          headers: {
-           'Content-Type': 'multipart/form-data;boundary="boundary"',
            'X-CSRFToken': Cookies.get('csrftoken'),
          },
-         body: JSON.stringify(obj)
+         body: formData
        };
 
        const handleError = (err) => console.warn(err);
        const responce = await fetch('/api/v1/profile/', options);
        const data = await responce.json().catch(handleError);
-
-       if(data.key){
-         Cookies.set('Authorization', `Token ${data.key}`)
-       }
+       console.log(data);
+       // if(data.key){
+       //   Cookies.set('Authorization', `Token ${data.key}`)
+       // }
 
      }
 
@@ -50,7 +52,7 @@ class Profile extends React.Component {
   }
   render(){
     return(
-      <form className="col-12" onSubmit={(event) => this.addPicture(event, this.state)}>
+      <form className="col-12" onSubmit={this.addImage}>
         <div className="form-group">
           <label htmlFor="avatar">Add picture</label>
           <input type='file' id="avatar" name="avatar" onChange={this.handleImage}/>

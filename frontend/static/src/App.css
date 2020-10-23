@@ -9,16 +9,12 @@
 
 .nav-buttons{
   display: inline;
-}
-
-.pages{
   justify-content: space-between;
-
 }
 
-.logged-in{
+
+.log-status{
   display: inline;
-  align-self: flex-end;
 }
 
 .main-title{
