@@ -9,6 +9,7 @@ class Article(models.Model):
     top_story = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="articles/", blank=True, null=True)
 
 
     def __str__(self):

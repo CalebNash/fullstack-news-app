@@ -43,13 +43,16 @@ class ArticlePosts extends React.Component{
 }
 
 componentDidMount() {
-  if(this.props.isStaff){
-    fetch('/api/v1/articles/super-user-view')
+  const is_staff = localStorage.getItem('is_staff')
+  console.log('is_staff', is_staff);
+  if(is_staff === 'false'){
+    fetch('/api/v1/articles/user-view')
       .then(responce => responce.json())
       .then(data => this.setState({articles: data}))
       .catch(error => console.log('Error: ', error));
-    }else{
-      fetch('/api/v1/articles/user-view')
+    }
+    else{
+      fetch('/api/v1/articles/super-user-view')
         .then(responce => responce.json())
         .then(data => this.setState({articles: data}))
         .catch(error => console.log('Error: ', error));
@@ -75,6 +78,8 @@ handleChange(event) {
 
 render(){
 
+  const is_staff = localStorage.getItem('is_staff')
+
   let status = this.state.displayStatus;
   let display;
 
@@ -93,13 +98,12 @@ render(){
     display = this.state.articles
    .filter(article => article.status === 'publish')
    .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
+ }else if(status === 'Declined'){
+    display = this.state.articles
+   .filter(article => article.status === 'declined')
+   .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
  }
-//this.props.editArticle(event, this.props.articleDisplay, this.props.articleDisplay.id)
-//function (event){
-  //event.preventDefault()
-  //let newArticle = {title: this.state.title, body: this.state.body, category: this.state.category, status: this.state.status, author: this.state.author};
-  //this.props.editArticle( this.state.articleDisplay.id);
-//}}>
+
   return (
     <React.Fragment>
     <div className='row posts-page'>
@@ -109,6 +113,7 @@ render(){
         <button className=" btn" onClick={() => this.handleClick('Drafts')}>Drafts</button>
         <button className=" btn" onClick={() => this.handleClick('Submited')}>Submited</button>
         <button className=" btn" onClick={() => this.handleClick('Published')}>Published</button>
+        <button className=" btn" onClick={() => this.handleClick('Declined')}>Declined</button>
     </section>
       <h1 className='posts-title'>{this.state.displayStatus}</h1>
       {display}
@@ -131,11 +136,11 @@ render(){
             <option>food</option>
           </select>
           <label htmlFor="status">Post Status</label>
-          <select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}>
-            <option>draft</option>
-            <option>submit</option>
-            <option>publish</option>
-          </select>
+          {
+            is_staff === true
+            ?<select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}><option>draft</option><option>submit</option><option>publish</option><option>decline</option></select>
+            :<select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}><option>draft</option><option>submit</option></select>
+          }
         </div>
         <button type="submit" className="btn btn-primary">Save</button>
       </form></Modal.Body>

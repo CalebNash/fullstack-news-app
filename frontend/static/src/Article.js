@@ -16,7 +16,6 @@ class Article extends React.Component{
     articles: [],
     page: 'home',
     loggedIn: Cookies.get('Authorization')? true: false,
-    isStaff: localStorage.getItem('is_staff')? true: false,
 
   }
   this.handleSubmit = this.handleSubmit.bind(this);
@@ -148,8 +147,11 @@ async handleLogin(e, obj, reg){
       if(data.key){
         Cookies.set('Authorization', `Token ${data.key}`)
         this.setState({loggedIn: true});
-        this.setState({page: 'posts'})
         localStorage.setItem('is_staff', data.is_staff);
+        this.setState({page: 'posts'})
+        console.log(data.is_staff);
+
+        console.log(localStorage.getItem('is_staff'));
       }
     }
   }
@@ -173,7 +175,7 @@ async handleLogin(e, obj, reg){
       Cookies.remove('Authorization');
       this.setState({page: 'home'});
       this.setState({loggedIn: false});
-      localStorage.clear();
+      localStorage.removeItem('is_staff');
     }
 
   }
@@ -182,6 +184,7 @@ async handleLogin(e, obj, reg){
 
   render(){
 
+
     let page = this.state.page;
     let display;
     if(page === 'home'){
@@ -189,7 +192,7 @@ async handleLogin(e, obj, reg){
     }else if(page === 'form'){
       display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display =  <React.Fragment><ArticlePosts deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout} isStaff ={this.state.isStaff}/><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
+      display =  <React.Fragment><ArticlePosts deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout} /><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
     }else if(page === 'register'){
       display = <Register handleRegistration = {this.handleRegistration}/>;
     }else if(page === 'login'){
