@@ -1,6 +1,8 @@
 import React from 'react'
 import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
+import ArticleForm from './ArticleForm';
+import Cookies from 'js-cookie'
 
 function MyArticle(props){
 
@@ -40,6 +42,7 @@ class ArticlePosts extends React.Component{
   this.handleClick = this.handleClick.bind(this);
   this.handleModal = this.handleModal.bind(this);
   this.handleChange = this.handleChange.bind(this);
+  this.deleteArticle = this.deleteArticle.bind(this);
 }
 
 componentDidMount() {
@@ -76,6 +79,31 @@ handleChange(event) {
   this.setState({articleDisplay});
 }
 
+deleteArticle(id) {
+    const csrftoken = Cookies.get('csrftoken')
+    const is_staff = localStorage.getItem('is_staff')
+    let endpoint;
+    if(is_staff === 'true'){
+      endpoint = `/api/v1/articles/super-user-view/${id}/`;
+    }else{
+      endpoint = `/api/v1/articles/user-view/delete/${id}/`;
+    }
+    fetch(endpoint, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRFToken': csrftoken,
+      },
+    })
+    .then(responce => responce)
+    .then(data => {
+      const articles = [...this.state.articles];
+      const index = articles.findIndex(article => article.id === id)
+      articles.splice(index,1);
+      this.setState({articles})
+    })
+    .catch(error => console.log('Error:', error))
+  }
+
 render(){
 
   const is_staff = localStorage.getItem('is_staff')
@@ -102,6 +130,8 @@ render(){
     display = this.state.articles
    .filter(article => article.status === 'declined')
    .map(article => <MyArticle key={article.id} article={article} handleModal= {this.handleModal}/>)
+ }else if(status === 'Add Post'){
+    display = <ArticleForm handleSubmit= {this.props.handleSubmit}/>
  }
 
   return (
@@ -114,6 +144,7 @@ render(){
         <button className=" btn" onClick={() => this.handleClick('Submited')}>Submited</button>
         <button className=" btn" onClick={() => this.handleClick('Published')}>Published</button>
         <button className=" btn" onClick={() => this.handleClick('Declined')}>Declined</button>
+        <button className=" btn" onClick={() => this.handleClick('Add Post')}>Add Post</button>
     </section>
       <h1 className='posts-title'>{this.state.displayStatus}</h1>
       {display}
@@ -137,7 +168,7 @@ render(){
           </select>
           <label htmlFor="status">Post Status</label>
           {
-            is_staff === true
+            is_staff === 'true'
             ?<select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}><option>draft</option><option>submit</option><option>publish</option><option>decline</option></select>
             :<select id="status" className="form-control" name="status" value={this.state.articleDisplay.status} onChange={this.handleChange}><option>draft</option><option>submit</option></select>
           }
@@ -145,7 +176,7 @@ render(){
         <button type="submit" className="btn btn-primary">Save</button>
       </form></Modal.Body>
       <Modal.Footer>
-      <Button onClick={() => this.props.deleteArticle(this.state.articleDisplay.id)}>Delete</Button>
+      <Button onClick={() => this.deleteArticle(this.state.articleDisplay.id)}>Delete</Button>
         <Button onClick={(event) => this.setState({show: false})}>Close</Button>
       </Modal.Footer>
     </Modal>

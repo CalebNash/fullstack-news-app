@@ -1,6 +1,5 @@
 import React from 'react';
 import ArticleList from './components/ArticleList'
-import ArticleForm from './components/ArticleForm'
 import ArticlePosts from './components/ArticlePosts'
 import Register from './components/Register'
 import Login from './components/Login.js';
@@ -20,7 +19,6 @@ class Article extends React.Component{
   }
   this.handleSubmit = this.handleSubmit.bind(this);
   this.handleClick = this.handleClick.bind(this);
-  this.deleteArticle = this.deleteArticle.bind(this);
   this.editArticle = this.editArticle.bind(this);
   this.handleRegistration = this.handleRegistration.bind(this);
   this.handleLogin = this.handleLogin.bind(this);
@@ -62,29 +60,19 @@ componentDidMount() {
     });
   }
 
-  deleteArticle(id) {
-      const csrftoken = Cookies.get('csrftoken')
-      fetch(`/api/v1/articles/${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRFToken': csrftoken,
-        },
-      })
-      .then(responce => responce)
-      .then(data => {
-        const articles = [...this.state.articles];
-        const index = articles.findIndex(article => article.id === id)
-        articles.splice(index,1);
-        this.setState({articles})
-      })
-      .catch(error => console.log('Error:', error))
-    }
 
 
     editArticle(event, data, id){
         event.preventDefault();
+        const is_staff = localStorage.getItem('is_staff')
+        let endpoint;
+        if(is_staff === 'true'){
+          endpoint = `/api/v1/articles/super-user-view/${id}/`;
+        }else{
+          endpoint = `/api/v1/articles/user-view/${id}/`;
+        }
         const csrftoken = Cookies.get('csrftoken')
-        fetch(`api/v1/articles/${id}/`, {
+        fetch(endpoint, {
           method: 'PUT',
           headers: {
             'X-CSRFToken': csrftoken,
@@ -189,10 +177,8 @@ async handleLogin(e, obj, reg){
     let display;
     if(page === 'home'){
       display = <ArticleList articles={this.state.articles}/>;
-    }else if(page === 'form'){
-      display = <ArticleForm handleSubmit= {this.handleSubmit}/>;
     }else if(page === 'posts'){
-      display =  <React.Fragment><ArticlePosts deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout} /><ArticleForm handleSubmit= {this.handleSubmit}/><Profile/></React.Fragment>;
+      display =  <React.Fragment><ArticlePosts deleteArticle={this.deleteArticle} editArticle={this.editArticle} handleLogout = {this.handleLogout} handleSubmit= {this.handleSubmit} /><Profile/></React.Fragment>;
     }else if(page === 'register'){
       display = <Register handleRegistration = {this.handleRegistration}/>;
     }else if(page === 'login'){

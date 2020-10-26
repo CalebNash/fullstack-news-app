@@ -7,10 +7,19 @@ class Profile extends React.Component {
     this.state = {
       image: null,
       preview: '',
+      profile: {}
     }
     this.addImage = this.addImage.bind(this)
     this.handleImage = this.handleImage.bind(this)
+    this.logImg = this.logImg.bind(this)
   }
+
+  // componentDidMount() {
+  //   fetch('/api/v1/profile/')
+  //     .then(responce => responce.json())
+  //     .then(data => this.setState({profile: data}))
+  //     .catch(error => console.log('Error: ', error));
+  //   }
 
   async addImage(e){
        e.preventDefault();
@@ -50,8 +59,15 @@ class Profile extends React.Component {
     }
     reader.readAsDataURL(file);
   }
+
+  logImg(){
+    console.log(this.state.profile);
+  }
   render(){
+    //<img src="http://127.0.0.1:8000/media/profiles/FB_IMG_1599050444777.jpg" alt=""/>
     return(
+      <React.Fragment>
+      <button onClick={this.logImg}>print</button>
       <form className="col-12" onSubmit={this.addImage}>
         <div className="form-group">
           <label htmlFor="avatar">Add picture</label>
@@ -60,6 +76,7 @@ class Profile extends React.Component {
         </div>
         <button type="submit" className="btn btn-primary">Add Profile</button>
       </form>
+      </React.Fragment>
     )
   }
 }
