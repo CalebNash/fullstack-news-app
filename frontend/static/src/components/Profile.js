@@ -14,12 +14,12 @@ class Profile extends React.Component {
     this.logImg = this.logImg.bind(this)
   }
 
-  // componentDidMount() {
-  //   fetch('/api/v1/profile/')
-  //     .then(responce => responce.json())
-  //     .then(data => this.setState({profile: data}))
-  //     .catch(error => console.log('Error: ', error));
-  //   }
+  componentDidMount() {
+    fetch('/api/v1/profile/')
+      .then(responce => responce.json())
+      .then(data => this.setState({profile: data}))
+      .catch(error => console.log('Error: ', error));
+    }
 
   async addImage(e){
        e.preventDefault();
