@@ -11,19 +11,43 @@ class ArticleForm extends React.Component{
       status: 'draft',
       user: '',
       top_story: false,
+      image: null,
+      preview: '',
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
 
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value})
   }
 
+  handleImage(e){
+      let file = e.target.files[0];
+      this.setState({
+        image: file
+      });
+
+      let reader = new FileReader();
+
+      reader.onloadend = () => {
+        this.setState({
+          preview: reader.result
+        });
+      }
+      reader.readAsDataURL(file);
+    }
+
+
   render(){
 
     return(
       <form className="col-12" onSubmit={(event) => this.props.handleSubmit(event, this.state)}>
         <div className="form-group">
+          <label htmlFor="image">Add picture</label>
+          <input type='file' id="image" name="image" onChange={this.handleImage}/>
+          <img className='image-preview' src={this.state.preview} alt=''/>
+        </div>
           <label htmlFor="title">Title</label>
           <input type="text" className="form-control" id="title" name="title" value={this.state.title} onChange={this.handleChange}/>
           <label htmlFor="body">Body</label>
@@ -41,7 +65,7 @@ class ArticleForm extends React.Component{
             <option>submit</option>
             <option>publish</option>
           </select>
-        </div>
+
         <button type="submit" className="btn btn-primary">Save</button>
       </form>
     )

@@ -124,3 +124,8 @@ body {
 #side-art-foot{
   justify-content: space-between;
 }
+
+.image-preview{
+  height: 100px;
+  width:auto;
+}

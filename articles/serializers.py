@@ -19,6 +19,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 class TokenSerializer(serializers.ModelSerializer):
     is_staff = serializers.ReadOnlyField(source='user.is_staff')
+    user_id = serializers.ReadOnlyField(source='user.id')
     class Meta:
         model = TokenModel
-        fields = ('key', 'is_staff')
+        fields = ('key', 'is_staff', 'user_id')

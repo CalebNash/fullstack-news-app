@@ -15,6 +15,7 @@ class Article extends React.Component{
     articles: [],
     page: 'home',
     loggedIn: Cookies.get('Authorization')? true: false,
+    profile: [],
 
   }
   this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,6 +24,7 @@ class Article extends React.Component{
   this.handleRegistration = this.handleRegistration.bind(this);
   this.handleLogin = this.handleLogin.bind(this);
   this.handleLogout = this.handleLogout.bind(this);
+  this.getProfile = this.getProfile.bind(this);
 }
 
 componentDidMount() {
@@ -32,34 +34,31 @@ componentDidMount() {
     .catch(error => console.log('Error: ', error));
   }
 
-  handleSubmit(event, data){
+  async handleSubmit(event, data){
     event.preventDefault();
-    const csrftoken = Cookies.get('csrftoken')
-    console.log('data', data);
-    fetch('/api/v1/articles/', {
+    let formData = new FormData();
+    formData.append('image', data.image)
+    formData.append('title', data.title)
+    formData.append('category', data.category)
+    formData.append('status', data.status)
+    formData.append('user', data.user)
+    formData.append('top_story', data.top_story)
+    console.log(formData);
+    const options = {
       method: 'POST',
       headers: {
-        'X-CSRFToken': csrftoken,
-        'Content-Type': 'application/json'
+        'X-CSRFToken': Cookies.get('csrftoken'),
       },
-      body: JSON.stringify(data),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-      return response.json()
-    })
-    .then(data => {
-      console.log('firing', data);
-      const articles = [...this.state.articles, data];
-      this.setState({articles: articles});
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  }
+      body: formData
+    };
 
+    const handleError = (err) => console.warn(err);
+    const responce = await fetch('/api/v1/articles/', options);
+    const dataInfo = await responce.json().catch(handleError);
+    console.log(dataInfo);
+    const articles = [...this.state.articles, data];
+    this.setState({articles: articles});
+  }
 
 
     editArticle(event, data, id){
@@ -108,6 +107,7 @@ componentDidMount() {
 
   if(data.key){
     Cookies.set('Authorization', `Token ${data.key}`)
+    localStorage.setItem('is_staff', data.is_staff);
     this.setState({page: 'posts'});
     this.setState({loggedIN: true});
   }
@@ -137,9 +137,7 @@ async handleLogin(e, obj, reg){
         this.setState({loggedIn: true});
         localStorage.setItem('is_staff', data.is_staff);
         this.setState({page: 'posts'})
-        console.log(data.is_staff);
-
-        console.log(localStorage.getItem('is_staff'));
+        this.getProfile(data.user_id)
       }
     }
   }
@@ -166,6 +164,13 @@ async handleLogin(e, obj, reg){
       localStorage.removeItem('is_staff');
     }
 
+  }
+
+  getProfile(id){
+    fetch(`/api/v1/profile/`)
+      .then(responce => responce.json())
+      .then(data => this.setState({profile: data}))
+      .catch(error => console.log('Error: ', error));
   }
 
 
@@ -197,6 +202,7 @@ async handleLogin(e, obj, reg){
             ?<div className='log-status'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('posts')}>Posts</button><button className="btn  menu-button"type="button" onClick={this.handleLogout}>Logout</button></div>
             :<div className='log-status'><button className="btn  menu-button"type="button" onClick={() => this.handleClick('login')}>Login</button></div>
           }
+
         </div>
       </nav>
       <div className='page-title'><h1>Fake News</h1></div>

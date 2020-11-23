@@ -14,12 +14,12 @@ class Profile extends React.Component {
     this.logImg = this.logImg.bind(this)
   }
 
-  componentDidMount() {
-    fetch('/api/v1/profile/')
-      .then(responce => responce.json())
-      .then(data => this.setState({profile: data}))
-      .catch(error => console.log('Error: ', error));
-    }
+  // componentDidMount() {
+  //   fetch('/api/v1/profile/')
+  //     .then(responce => responce.json())
+  //     .then(data => this.setState({profile: data}))
+  //     .catch(error => console.log('Error: ', error));
+  //   }
 
   async addImage(e){
        e.preventDefault();
@@ -38,9 +38,9 @@ class Profile extends React.Component {
        const responce = await fetch('/api/v1/profile/', options);
        const data = await responce.json().catch(handleError);
        console.log(data);
-       // if(data.key){
-       //   Cookies.set('Authorization', `Token ${data.key}`)
-       // }
+       if(data.key){
+         Cookies.set('Authorization', `Token ${data.key}`)
+       }
 
      }
 

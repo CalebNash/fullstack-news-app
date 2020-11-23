@@ -13,6 +13,9 @@ class ProfileListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user = self.request.user)
 
+    def get_queryset(self):
+         user = self.request.user
+         return Profile.objects.filter(user=user)
 
 
 
@@ -23,7 +26,3 @@ class ProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user = self.request.user)
-
-    def get_queryset(self):
-         user = self.request.user
-         return Profile.objects.filter(user=user)
